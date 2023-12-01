@@ -1,0 +1,84 @@
+<% function formatDate(date) 
+{ 
+  return (date.getDate() < 10 ? '0' : '') + date.getDate() + '/' + ((date.getMonth() + 1) < 10 ? '0' : '') 
+          + (date.getMonth() + 1) + '/' + date.getFullYear() 
+} %> 
+
+<% function formatTime(date) 
+{ 
+  let hours = date.getHours(); 
+  let AmPm = hours >= 12 ? 'PM' : 'AM'; 
+  hours %= 12; 
+  return (hours < 10 ? '0' : '') + hours + ':' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ' ' + AmPm;
+} %> 
+
+<% layout('layouts/boilerplate') -%> 
+
+<% for(let match of matches) { %>
+<div class="container match-card">
+  <div class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img
+          src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vdGJhbGwlMjBzdGFkaXVtfGVufDB8fDB8fHww"
+          class="img-fluid rounded"
+        />
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">
+            <span class="fw-bold text-primary" id="homeTeam"> <%= match.homeTeam %> </span> vs
+            <span class="fw-bold text-danger" id="awayTeam"> <%= match.awayTeam %> </span>
+            <span class="badge bg-success fs-6"><%= match.matchVenue %></span>
+          </h5>
+          
+          <p class="card-text">
+            <%= match.description %>
+          </p>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" class="text-bg-primary rounded">Home Team</th>
+                <th scope="col" class="text-bg-danger rounded">Away Team</th>
+                <th scope="col" class="text-bg-warning rounded">Main Referee</th>
+                <th scope="col" class="text-bg-info rounded">1<sup>st</sup> Linesmen</th>
+                <th scope="col" class="text-bg-secondary rounded">2<sup>nd</sup> Linesmen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="width: 20%;"><%= match.homeTeam %></td>
+                <td style="width: 20%;"><%= match.awayTeam %></td>
+                <td style="width: 20%;"><%= match.mainReferee %></td>
+                <td style="width: 20%;"><%= match.linesmen[0] %></td>
+                <td style="width: 20%;"><%= match.linesmen[1] %></td>
+              </tr>
+            </tbody>
+          </table>
+
+          
+          <p class="card-text">
+            <small class="text-body-secondary"
+              ><strong> Date: </strong> <%= formatDate(match.matchDate) %>,
+              <strong> Time: </strong> <%= formatTime(match.matchDate) %>
+            </small>
+          </p>
+          <a class="btn btn-outline-info" href="/matches/<%=match._id%>">View Match</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% } %>
+
+<div class="position-absolute top-50 start-50 translate-middle text-danger display-3" id="NO-RESULT" style="display: none;"">
+  NO RESULT
+</div>
+
+<script>
+  document.querySelector('input[type="search"]').addEventListener('input', (e) => {
+    displayOnlySearchVal(e.target.value);
+  });
+</script>
