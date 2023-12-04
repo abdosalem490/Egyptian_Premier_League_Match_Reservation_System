@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');   // to connect to the mongodb
-const Schema = mongoose.Schema;     // to create the schema
+const Schema = mongoose.Schema;         // to create the schema
+const Stadium = require('./stadium');   // DON'T DELETE THIS LINE (because stadium schema has to be executed first before match schema)
 const { teams, stadiums } = require('../constants');
 
 // create the schema
@@ -19,8 +20,8 @@ const matchSchema = new Schema({
         required: true
     },
     matchVenue: {
-        type: String,
-        enum: stadiums,
+        type: Schema.Types.ObjectId,
+        ref: 'Stadium',
         required: true
     },
     matchDate: {
