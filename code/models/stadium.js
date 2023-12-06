@@ -19,17 +19,10 @@ const StadiumSchema = new Schema({
         required: true
     },
     images: [ImageSchema],
-    // geometry: {
-    //     type: {
-    //         type: String,
-    //         enum: ['Point'],
-    //         required: true
-    //     },
-    //     coordinates: {
-    //         type: [Number],
-    //         required: true
-    //     }
-    // },
+    coordinates: {
+        type: [Number],
+        required: true
+    }
 })
 
 // export the model

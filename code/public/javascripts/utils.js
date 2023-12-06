@@ -26,3 +26,31 @@ function displayOnlySearchVal(value) {
         }
     }
 }
+
+function updateMapOnSelectingStadium() {
+    mapboxgl.accessToken = mapToken;
+
+    // get the selected stadium
+    const stadName = document.querySelector('#stadium').value;
+    const stadium = stadiums.find((stad) => {
+        if (stad.stadiumName === stadName)
+            return stad;
+    });
+
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        center: stadium.coordinates, // starting position [lng, lat]
+        zoom: 9 // starting zoom
+    });
+
+    let popup = new mapboxgl.Popup()
+        .setText(stadium.stadiumName)
+        .addTo(map);
+
+    let marker = new mapboxgl
+        .Marker()
+        .setLngLat(stadium.coordinates)
+        .addTo(map)
+        .setPopup(popup);
+
+}

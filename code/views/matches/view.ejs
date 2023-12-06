@@ -14,7 +14,7 @@
  
                   <% for (let i = 0; i < match.matchVenue.images.length; i++) { %>
                     <div class="carousel-item <%= (i == 0 ? 'active' : '') %>" data-bs-interval="3000">
-                      <img src="<%= match.matchVenue.images[i].url %>" 
+                      <img src="<%= match.matchVenue.images[i].url %>"
                       class="d-block w-100 rounded" height="350">
                     </div>
                   <% } %>
@@ -67,7 +67,7 @@
                   <h5 class="card-title text-center fw-bolder fs-4 text-success">
                       <%= match.matchVenue.stadiumName %>
                   </h5>
-                  <p class="card-text text-center">TODO: add map here</p>
+                  <div id="map" style="height: 300px;"></div> 
               </div>
               <ul class="list-group list-group-horizontal">
                 <li class="list-group-item list-group-item-primary col-3">Main Referee</li>
@@ -80,8 +80,22 @@
               <ul class="list-group list-group-horizontal">
                 <li class="list-group-item list-group-item-warning col-3">2<sup>nd</sup> Linesmen</li>
                 <li class="list-group-item flex-fill text-center fw-bold"><%= match.linesmen[1] %></li>
-              </ul>								
+              </ul>				
+              <div class="card-body d-flex align-items-center justify-content-center">
+                <a href="/matches/<%= match._id %>/book_seat" class="card-link btn btn-primary w-50">Book a Seat</a>
+              </div>				
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+  const mapToken = '<%- process.env.MAPBOX_API_KEY%>';
+  const match = <%- JSON.stringify(match) %>
+</script>
+
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css' rel='stylesheet' />
+
+<script src="/javascripts/showStadiumMap.js"></script>

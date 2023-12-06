@@ -1,0 +1,99 @@
+<% layout('layouts/boilerplate') -%> 
+
+
+<div class="container">
+    <h2 class="d-flex align-items-center justify-content-center mt-3 mb-3 fs-2">Add New Match</h2>
+    <div class="row">
+        <div class="col-6 offset-3 position-relative">
+            <form action="/matches" method="post" class="needs-validation">
+                <div class="mb-3">
+                  <label for="homeTeam" class="form-label">Home Team</label>
+                  <select class="form-select mb-3" id="homeTeam">
+                    <% for(let i = 0; i < teams.length; i++)  { %>
+                        <option value="<%= teams[i] %>" <%=(i == 0 ? 'selected' : '')%>><%= teams[i] %></option>    
+                    <% } %>
+                  </select>
+				  	<div class="form-text text-danger d-none">
+						Away Team Shall not be same as Home Team. (YOU CAN'T PLAY WITH YOURSELF).
+					</div>
+			    </div>
+                <div class="mb-3">
+                    <label for="awayTeam" class="form-label">Away Team</label>
+                    <select class="form-select mb-3" id="awayTeam">
+                        <% for(let i = 0; i < teams.length; i++)  { %>
+                            <option value="<%= teams[i] %>" <%=(i == 1 ? 'selected' : '')  %>><%= teams[i] %></option>    
+                        <% } %>
+                    </select>
+				  	<div class="form-text text-danger d-none">
+						Away Team Shall not be same as Home Team. (YOU CAN'T PLAY WITH YOURSELF).
+					</div>
+                </div>
+				<div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+					<textarea class="form-control" id="description" rows="3"></textarea>
+				  	<div class="form-text text-danger d-none">
+						Description mustn't be empty.
+					</div>
+                </div>
+                <div class="mb-3">
+                  <label for="stadium" class="form-label">Match Venue</label>
+                  <select class="form-select mb-3" onchange="updateMapOnSelectingStadium()" id="stadium">
+                    <% for(let i = 0; i < stadiums.length; i++)  { %>
+                        <option value="<%= stadiums[i].stadiumName %>" <%= (i == 0 ? 'selected' : '') %>><%= stadiums[i].stadiumName %></option>    
+                    <% } %>
+                  </select>
+                </div>
+                <div id="map" style="height: 300px;" class="mb-3 rounded"></div> 
+                <div class="mb-3">
+					<label for="date" class="form-label">Date & Time</label>
+					<br>
+                    <input type="text" name="" id="date" class="form-control" placeholder="select date & Time for the match" data-input>
+					<div class="form-text text-danger d-none">
+						Please Select a Date!
+					</div>
+				</div>       
+				<div class="mb-3">
+					<div class="input-group">
+						<span class="input-group-text" id="inputGroup-sizing-default">Main Referee Name</span>
+						<input type="text" id="main-referee" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+					</div>   
+					<div class="form-text text-danger d-none">
+						Main Referee Name mustn't be empty!
+					</div> 
+				</div>
+
+				<div class="mb-3">
+					<div class="input-group">
+						<span class="input-group-text">1<sup class="me-1">st</sup> and 2<sup class="me-1">nd</sup> Linesmen Names</span>
+						<input type="text" class="form-control" id="first-linesmen" placeholder="First Linesmen Name">
+						<input type="text" class="form-control" id="second-linesmen" placeholder="Second Linesmen Name">
+					</div>
+					<div class="form-text text-danger d-none">
+						Linesmen Names mustn't be empty!
+					</div> 
+				</div>
+				<div class="text-center mb-3">
+					<button type="submit" class="btn btn-primary w-100">Submit</button>
+				</div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="/javascripts/utils.js"></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css' rel='stylesheet' />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="/javascripts/addmatch.js"></script>
+<script>
+
+    const mapToken = '<%- process.env.MAPBOX_API_KEY%>';
+    const stadiums = <%- JSON.stringify(stadiums) %>
+
+    updateMapOnSelectingStadium();
+
+</script>
+
+

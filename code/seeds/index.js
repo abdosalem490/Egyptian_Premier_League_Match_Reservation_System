@@ -1,9 +1,11 @@
 require('dotenv').config();
 
 const mongoose = require('mongoose');
-const { teams, stadiums, randomMaleNames, randomDescriptions } = require('../constants');
+const { teams, stadiums, randomMaleNames, randomDescriptions, stadiumImages, stadiumLocations } = require('../constants');
 const Match = require('../models/match');
 const Stadium = require('../models/stadium')
+
+
 
 mongoose.connect(process.env.DB_URL);
 
@@ -21,14 +23,15 @@ let stad_ids = []
 const seedRun = async () => {
     await Match.deleteMany({});
     await Stadium.deleteMany({});
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < stadiums.length; i++) {
         const stadium = new Stadium({
-            stadiumName: randomElement(stadiums),
+            stadiumName: stadiums[i],
             images: [
-                { filename: 'match1', url: "https://source.unsplash.com/random/350%C3%97350/?football" },
-                { filename: 'match2', url: "https://source.unsplash.com/random/350%C3%97350/?football" },
-                { filename: 'match3', url: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vdGJhbGwlMjBzdGFkaXVtfGVufDB8fDB8fHww" },
-            ]
+                { filename: 'match1', url: randomElement(stadiumImages) },
+                { filename: 'match2', url: randomElement(stadiumImages) },
+                { filename: 'match3', url: randomElement(stadiumImages) },
+            ],
+            coordinates: stadiumLocations[stadiums[i]]
         })
         res = await stadium.save();
         stad_ids.push(res.id);
