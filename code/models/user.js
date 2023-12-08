@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');   // to connect to the mongodb
 const Schema = mongoose.Schema;     // to create the schema
 const passportLocalMongoose = require('passport-local-mongoose'); // simplifies building username and password login with Passport. it handles password addition and encryption to the db
-const {genders, roles} = require('../constants');
+const { genders, roles } = require('../constants');
 
 // create the schema
 const UserSchema = new Schema({
@@ -23,7 +23,7 @@ const UserSchema = new Schema({
         required: true,
     },
     Gender: {
-        type: String, 
+        type: String,
         enum: genders,
 
         required: true,
@@ -33,32 +33,26 @@ const UserSchema = new Schema({
         required: true,
     },
     Address: {
-        name: String,
-        geometry: {
-            type: {
-                type: String,
-                enum: ['Point'],
-                required: true
-            },
-            coordinates: {
-                type: [Number],
-                required: true
-            }
-        }
+        type: String,
+        required: true
     },
     Email: {
-        type: String,   
+        type: String,
         required: true,
         unique: true,
     },
-    type: {
-        type: String,   
+    UserType: {
+        type: String,
         enum: roles,
         required: true,
     },
     ProfilePicture: {
         url: String,
         filename: String,
+    },
+    isApproved: {
+        type: Boolean,
+        default: false
     }
 });
 

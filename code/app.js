@@ -12,10 +12,12 @@ const path = require('path');
 const ejsMate = require('ejs-mate');    // To render HTML pages for login and profile
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
+const fileUpload = require('express-fileupload')
 
 // import files from same project
 const userRoutes = require('./routes/users');
 const matchRoutes = require('./routes/matches');
+const stadiumRoutes = require('./routes/stadiums');
 const User = require('./models/user');
 
 // connect to the database (mongodb)
@@ -55,6 +57,7 @@ app.use(express.urlencoded({ extended: true }));  // to parse coming POST and PU
 app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(fileUpload());
 app.use(mongoSanitize());
 app.use(flash());
 app.use(session(sessionConfig));
@@ -66,6 +69,7 @@ app.use(passport.session());
 
 app.use('/', userRoutes);
 app.use('/matches', matchRoutes);
+app.use('/stadiums', stadiumRoutes);
 app.get('/', (req, res) => {
     res.render('home');
 });

@@ -1,0 +1,113 @@
+<% layout('layouts/boilerplate') -%> 
+
+
+<div class="container">
+    <h2 class="d-flex align-items-center justify-content-center mt-3 mb-3 fs-2">Add New Stadium</h2>
+    <div class="row">
+        <div class="col-6 offset-3 position-relative">
+            <form action="/stadiums" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label for="homeTeam" class="form-label">Stadium Name</label>
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="ex: Borg el-Arab" aria-describedby="basic-addon2" name="stadName" required>
+                    <span class="input-group-text" id="basic-addon2">Stadium</span>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div> 
+                  </div>
+
+			    </div>
+                <label class="form-label" for="inputGroupFile01">Stadium Images</label>
+				<div class="input-group mb-3">
+                    <input type="file" class="form-control" id="inputGroupFile01" accept='image/*' multiple name="images" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="mb-3 " id="images-preview">
+                </div>
+                <div class="mb-3">
+					<div class="input-group">
+						<span class="input-group-text">Location Name</span>
+						<input type="text" id="location-name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" name="locationName" required>
+                        <!-- <button class="input-group-text bg-info">Search</button> -->
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div> 
+                    </div>   
+				</div>
+                <div id="map" style="height: 300px;" class="mb-3 rounded"></div>      
+
+				<div class="text-center mb-3">
+					<button type="submit" class="btn btn-primary w-100">Submit</button>
+				</div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="/javascripts/utils.js"></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css' type='text/css' />
+
+<script>
+
+    document.querySelector("#inputGroupFile01").addEventListener("change", (ev) => {
+        if (!ev.target.files) return; // Do nothing.
+        const parentElement = document.querySelector('#images-preview');
+        parentElement.innerHTML = "";
+        [...ev.target.files].forEach(previewImage);
+    });
+    const mapToken = '<%- process.env.MAPBOX_API_KEY%>';
+    mapboxgl.accessToken = mapToken;
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        center: [31.2996641, 30.0595563], // starting position [lng, lat]
+        zoom: 9 // starting zoom
+    });
+
+    const stadLocation = document.querySelector('#location-name');
+    let coordinates = 0;
+    let marker = null;
+    stadLocation.addEventListener('change', async (event) => {
+        let endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${event.target.value}.json?limit=1&access_token=`+mapToken;
+        console.log(endpoint);
+        fetch(endpoint, {method: "GET"})
+            .then((res) => res.json())
+            .then((date) => {
+                if (marker !== null)
+                    marker.remove();
+                coordinates = date.features[0].geometry.coordinates;
+                map.setCenter(coordinates);
+                marker = new mapboxgl
+                    .Marker()
+                    .setLngLat(coordinates)
+                    .addTo(map);
+            });
+    });
+
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (() => {
+    'use strict'
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    const forms = document.querySelectorAll('.needs-validation')
+
+    // Loop over them and prevent submission
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+        }, false)
+    })
+    })()
+</script>
+
+

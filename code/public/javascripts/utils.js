@@ -54,3 +54,17 @@ function updateMapOnSelectingStadium() {
         .setPopup(popup);
 
 }
+
+function previewImage(file) {
+    const parentElement = document.querySelector('#images-preview');
+    const fr = new FileReader();
+    fr.onload = () => {
+        const img = document.createElement("img");
+        img.style.width = '190px'
+        img.style.height = '190px'
+        img.classList.add('rounded', 'img-fluid', 'm-1')
+        img.src = fr.result;  // String Base64 
+        parentElement.append(img);
+    };
+    fr.readAsDataURL(file);
+}

@@ -1,13 +1,16 @@
 const router = require('express').Router(); // related to routes
-const passport = require('passport'); // for authentication
-const User = require('../models/user'); // for the user model
-const { genders, roles } = require('../constants');
-
+const users = require('../controllers/user');
 
 
 router.route('/register')
-    .get((req, res) => { res.render('users/register', { title: 'Register', genders: genders, roles: roles, displaySearchInput: false }) })
-    .post((req, res) => { console.log(req.body); res.send("hello") });    // for post requests
+    .get(users.showRegisterPage)
+    .post(users.addUserToBeApproved);    // for post requests
 
+router.route('/login')
+    .get(users.showLoginPage)
+    .post(users.login);
+
+router.route('/account')
+    .get(users.showAccountPage);
 
 module.exports = router;
