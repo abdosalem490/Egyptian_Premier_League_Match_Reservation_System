@@ -14,6 +14,7 @@ module.exports.addUserToBeApproved = async (req, res) => {
     images = req.files.map(file => ({ url: '/resources/uploads/' + file.filename, filename: file.filename }));
 
     const user = new User({
+        'username': req.body.email, // this is for passport authentication
         'Username': req.body.username,
         'FirstName': req.body.first_name,
         'LastName': req.body.last_name,
@@ -26,10 +27,11 @@ module.exports.addUserToBeApproved = async (req, res) => {
         'ProfilePicture': { url: '/resources/uploads/' + req.files[0].filename, filename: req.files[0].filename },
         'isApproved': false,
     });
-    console.log(user);
 
-    const user_to_be_accepted = await User.register(req.body.email, req.body.password);
+    const user_to_be_accepted = await User.register(user, req.body.password);
 
+    // TODO: add push notification
+    
     res.send({ path: '/matches' });
 }
 

@@ -25,7 +25,6 @@ mongoose.connect(process.env.DB_URL);
 // utilities from the dependencies
 const app = express();  // to use express server utilities
 
-
 // to render pages 
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
@@ -59,8 +58,9 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(mongoSanitize());
 app.use(flash());
 app.use(session(sessionConfig));
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.initialize()); // init passport on every route call.
+app.use(passport.session());    // allow passport to use "express-session".
+
 
 
 // routes

@@ -56,12 +56,8 @@ const UserSchema = new Schema({
     }
 });
 
-// define a virtual property for the Role field
-// UserSchema.virtual('Role').get(function(){
-//     return this.type < 2 ? 'Manager' : 'Fan';
-// });
 
-// add the plugin that adds the password
+// add the plugin that adds the password and username fields that authenticate it
 UserSchema.plugin(passportLocalMongoose);
 
 // export the model
