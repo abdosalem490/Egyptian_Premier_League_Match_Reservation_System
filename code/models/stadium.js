@@ -22,6 +22,14 @@ const StadiumSchema = new Schema({
     coordinates: {
         type: [Number],
         required: true
+    },
+    length: {
+        type: Number,
+        required: true
+    },
+    width: {
+        type: Number,
+        required: true
     }
 })
 

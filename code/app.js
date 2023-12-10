@@ -79,6 +79,19 @@ passport.use(new LocalStrategy(User.authenticate()));   // for normal authentica
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// middleware for storing data
+app.use((req, res, next) => {
+    res.locals.current_user = req.user;
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
+
+// handle any non-existent page
+app.get('*', (req, res, next) => {
+    res.send('page not found');
+    next();
+})
 
 // begin listening to the ports
 app.listen(process.env.PORT_NUM, () => {

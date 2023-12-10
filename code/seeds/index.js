@@ -18,6 +18,15 @@ const randEnemyTeam = (homeTeam, array) => {
     return awayTeam;
 };
 const randomDate = (from, to) => new Date(from.getTime() + Math.random() * (to.getTime() - from.getTime()));
+const randomIntegerArray = (min, max, length) => {
+    return Array.from(
+        { length: length },
+        () => Math.floor(Math.random() * (max - min + 1)) + min
+    )
+}
+const stadium_lengths = randomIntegerArray(30, 70, 50);
+const stadium_widths = randomIntegerArray(30, 70, 50);
+
 let stad_ids = []
 
 const seedRun = async () => {
@@ -31,7 +40,9 @@ const seedRun = async () => {
                 { filename: 'match2', url: randomElement(stadiumImages) },
                 { filename: 'match3', url: randomElement(stadiumImages) },
             ],
-            coordinates: stadiumLocations[stadiums[i]]
+            coordinates: stadiumLocations[stadiums[i]],
+            length: randomElement(stadium_lengths),
+            width: randomElement(stadium_widths)
         })
         res = await stadium.save();
         stad_ids.push(res.id);

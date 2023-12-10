@@ -72,3 +72,8 @@ module.exports.updateMatch = async (req, res) => {
     res.send({ redirect: `/matches/${req.params.id}` });
 
 }
+
+module.exports.showSeats = async (req, res) => {
+    const match = await Match.findById(req.params.id).populate('matchVenue');
+    res.render('matches/seats_view', { match, title: 'view seats', displaySearchInput: false })
+} 

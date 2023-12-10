@@ -23,7 +23,8 @@ module.exports.addUserToBeApproved = async (req, res) => {
         'isApproved': false,
     });
 
-    await user.save();
+    const user_to_be_accepted = await User.register(user, req.body.password);
+
     res.send({ path: '/matches' });
 }
 
@@ -40,5 +41,4 @@ module.exports.login = async (req, res) => {
 
 module.exports.showAccountPage = async (req, res) => {
     res.render('users/details', { title: 'Account', displaySearchInput: false })
-
 }

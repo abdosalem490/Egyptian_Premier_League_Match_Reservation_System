@@ -19,6 +19,7 @@ router.route('/:id')
 router.route('/:id/edit')
     .get(matches.showEditMatch);
 
-// router.route('/:id/book_seat')
+router.route('/:id/view_seats')
+    .get(matches.showSeats);
 
 module.exports = router;
