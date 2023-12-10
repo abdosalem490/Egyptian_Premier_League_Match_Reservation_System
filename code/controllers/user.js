@@ -7,8 +7,12 @@ module.exports.showRegisterPage = async (req, res) => {
 }
 
 module.exports.addUserToBeApproved = async (req, res) => {
+    console.log(req.files);
+    console.log(req.body);
 
-    req.files.image.mv(__dirname + '/../public/resources/uploads/' + req.files.image.name);
+    // req.files.image.mv(__dirname + '/../public/resources/uploads/' + req.files.image.name);
+    images = req.files.map(file => ({ url: '/resources/uploads/' + file.filename, filename: file.filename }));
+
     const user = new User({
         'Username': req.body.username,
         'FirstName': req.body.first_name,
@@ -19,11 +23,12 @@ module.exports.addUserToBeApproved = async (req, res) => {
         'Address': req.body.address,
         'Email': req.body.email,
         'UserType': req.body.role,
-        'ProfilePicture': { url: '/resources/uploads/' + req.files.image.name, filename: req.files.image.name },
+        'ProfilePicture': { url: '/resources/uploads/' + req.files[0].filename, filename: req.files[0].filename },
         'isApproved': false,
     });
+    console.log(user);
 
-    const user_to_be_accepted = await User.register(user, req.body.password);
+    const user_to_be_accepted = await User.register(req.body.email, req.body.password);
 
     res.send({ path: '/matches' });
 }

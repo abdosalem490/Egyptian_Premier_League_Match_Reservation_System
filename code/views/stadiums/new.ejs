@@ -7,7 +7,7 @@
         <div class="col-6 offset-3 position-relative">
             <form action="/stadiums" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
                 <div class="mb-3">
-                  <label for="homeTeam" class="form-label">Stadium Name</label>
+                  <label for="homeTeam" class="form-label fw-bold">Stadium Name</label>
                   <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="ex: Borg el-Arab" aria-describedby="basic-addon2" name="stadName" required>
                     <span class="input-group-text" id="basic-addon2">Stadium</span>
@@ -17,7 +17,7 @@
                   </div>
 
 			    </div>
-                <label class="form-label" for="inputGroupFile01">Stadium Images</label>
+                <label class="form-label fw-bold" for="inputGroupFile01">Stadium Images</label>
 				<div class="input-group mb-3">
                     <input type="file" class="form-control" id="inputGroupFile01" accept='image/*' multiple name="images" required>
                     <div class="valid-feedback">
@@ -26,6 +26,17 @@
                 </div>
                 <div class="mb-3 " id="images-preview">
                 </div>
+                <label class="form-label fw-bold" for="length">Stadium Dimensions</label>
+                <div class="input-group mb-3">
+                    <input id="length" name="length" type="number" class="form-control" placeholder="number of rows" aria-label="Username" min="1" required>
+                    <span class="input-group-text">X</span>
+                    <input name="width" type="number" class="form-control" placeholder="number of seats in one row" aria-label="Server" min="1" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+
+                  
                 <div class="mb-3">
 					<div class="input-group">
 						<span class="input-group-text">Location Name</span>
@@ -37,7 +48,6 @@
                     </div>   
 				</div>
                 <div id="map" style="height: 300px;" class="mb-3 rounded"></div>      
-
 				<div class="text-center mb-3">
 					<button type="submit" class="btn btn-primary w-100">Submit</button>
 				</div>
