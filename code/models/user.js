@@ -25,7 +25,6 @@ const UserSchema = new Schema({
     Gender: {
         type: String,
         enum: genders,
-
         required: true,
     },
     City: {

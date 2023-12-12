@@ -1,1 +1,147 @@
-<% layout('layouts/account') -%> 
+<% layout('partials/account') -%> 
+
+<div class="row">
+    <div class="d-flex align-items-center justify-content-center mt-3">
+        <img class="rounded" width="350" src="<%= current_user.ProfilePicture.url %>" id="profile_image">
+    </div>
+</div>
+
+<form action="/account?_method=PUT" class="needs-validation" novalidate method="POST" enctype="multipart/form-data">
+
+    <div class="offset-3 mt-3 mb-1">
+        <span class="form-label" for="inputGroupFile">Change Profile image</span>
+    </div>
+    <div class="offset-3 input-group custom-file-button w-50 rounded">
+        <input type="file" class="form-control" id="inputGroupFile01" accept='image/*' name="image">
+    </div>
+
+    <div class="w-50 offset-3 mt-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text w-25" id="basic-addon1">Username</span>
+            <input type="text" disabled class="form-control" placeholder="Username" value="<%= current_user.Username %>">
+        </div>
+    </div>
+
+    <div class="w-50 offset-3 mt-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text w-25" id="basic-addon1">Email</span>
+            <input type="text" class="form-control" placeholder="Email" value="<%= current_user.Email %>" disabled>
+        </div>
+    </div>
+
+
+    <div class="w-50 offset-3 mt-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text w-25" id="basic-addon1">First Name</span>
+            <input type="text" class="form-control" placeholder="First Name" name="first_name" value="<%= current_user.FirstName %>" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+    </div>
+
+    <div class="w-50 offset-3 mt-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text w-25" id="basic-addon1">Last Name</span>
+            <input type="text" class="form-control" placeholder="Last Name" name="last_name" value="<%= current_user.LastName %>" required>
+        </div>
+    </div>
+
+    <div class="w-50 offset-3 mt-3">
+        <label for="date" class="form-label">BirthDate</label>
+        <br>
+        <input type="text" id="date" class="form-control" name="birth_date" placeholder="select date & Time for the match" data-input  required>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+    </div>       
+
+    <div class="w-50 offset-3 mt-3">
+        <label for="gender">Gender</label>
+        <select id="gender" class="form-select mb-3" name="gender">
+        <% for( let gender of genders) { %>
+            <option value="<%= gender %>" <%= (gender === current_user.Gender ? 'selected' : '') %>><%= gender %></option>
+        <% } %>
+        </select>
+    </div>
+
+
+    <div class="w-50 offset-3 mt-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text w-25" id="basic-addon1">City</span>
+            <input type="text" class="form-control" placeholder="City" value="<%= current_user.City %>" required name="city">
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+    </div>
+    <div class="w-50 offset-3 mt-3">
+        <label for="gender">Address</label>
+        <textarea
+        class="form-control"
+        placeholder="Address"
+        id="address"
+        style="height: 100px"
+        name="address"
+        required
+        ><%= current_user.Address %></textarea>
+        <div class="valid-feedback">
+            Looks good!
+        </div>
+    </div>   
+
+    <div class="w-50 offset-3 mt-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text w-25" id="basic-addon1">Role</span>
+            <input type="text" disabled class="form-control" placeholder="Role" value="<%= current_user.UserType %>">
+        </div>
+    </div>
+
+    <div class="w-50 offset-3 mt-3 mb-3">
+        <button type="submit" class="btn btn-primary w-100">SAVE</button>
+    </div>
+</form>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    const fp = flatpickr("#date", {
+        enableTime: false,
+        dateFormat: "d/m/Y",
+        defaultDate: new Date('<%= current_user.BirthDate %>')
+    });
+
+    const profile_image = document.getElementById('inputGroupFile01');
+    profile_image.addEventListener("change", (ev) => {
+        if (!ev.target.files) return; // Do nothing.
+        const file = profile_image.files;
+        if (file) {
+            const fileReader = new FileReader();
+            const image = document.querySelector('#profile_image');
+            fileReader.onload = event => {
+                image.setAttribute('src', event.target.result);
+            }
+            fileReader.readAsDataURL(file[0]);
+        }
+    });
+
+    (() => {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>

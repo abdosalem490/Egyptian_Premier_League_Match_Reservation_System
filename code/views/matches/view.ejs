@@ -53,12 +53,14 @@
                   <li class="list-group-item list-group-item-secondary col-3">Time</li>
                   <li class="list-group-item flex-fill text-center fw-bold"><%= utils.formatTime(match.matchDate) %></li>
                 </ul>
-                <div class="card-body d-flex align-items-center justify-content-center">
-                  <a href="/matches/<%= match._id %>/edit" class="card-link btn btn-info">Edit Match</a>
-                  <form class="d-inline-block ms-1" action="/matches/<%= match._id %>?_method=DELETE" method="post">
-                      <button class="btn btn-danger">Delete Match</button>
-                  </form>
-                </div>
+                <% if(current_user && (current_user.UserType === 'admin' || current_user.UserType === 'manager')) { %>
+                  <div class="card-body d-flex align-items-center justify-content-center">
+                    <a href="/matches/<%= match._id %>/edit" class="card-link btn btn-info">Edit Match</a>
+                    <form class="d-inline-block ms-1" action="/matches/<%= match._id %>?_method=DELETE" method="post">
+                        <button class="btn btn-danger">Delete Match</button>
+                    </form>
+                  </div>
+                <% } %>
             </div>
         </div>
         <div class="col-6 mt-5">
@@ -81,9 +83,19 @@
                 <li class="list-group-item list-group-item-warning col-3">2<sup>nd</sup> Linesmen</li>
                 <li class="list-group-item flex-fill text-center fw-bold"><%= match.linesmen[1] %></li>
               </ul>				
-              <div class="card-body d-flex align-items-center justify-content-center">
-                <a href="/matches/<%= match._id %>/view_seats" class="card-link btn btn-primary w-50">View Seats</a>
-              </div>				
+              <ul class="list-group list-group-horizontal">
+                <li class="list-group-item list-group-item-light col-3">number of rows</li>
+                <li class="list-group-item flex-fill text-center fw-bold"><%= match.matchVenue.length %></li>
+              </ul>	
+              <ul class="list-group list-group-horizontal">
+                <li class="list-group-item list-group-item-light col-3">number of seats in one row</li>
+                <li class="list-group-item flex-fill text-center fw-bold"><%= match.matchVenue.width %></li>
+              </ul>	
+              <% if(current_user) {%>
+                <div class="card-body d-flex align-items-center justify-content-center">
+                  <a href="/matches/<%= match._id %>/view_seats" class="card-link btn btn-primary w-50">View Seats</a>
+                </div>				
+              <% } %>
             </div>
         </div>
     </div>

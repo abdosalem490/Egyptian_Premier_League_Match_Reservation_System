@@ -32,7 +32,7 @@
                     <div class="input-group mb-3">
                       <input
                         type="text"
-                        name="email"
+                        name="username"
                         id="email"
                         class="form-control"
                         placeholder="email"
@@ -96,6 +96,8 @@
             if (!form.checkValidity()) {
                 event.preventDefault()
                 event.stopPropagation()
+            } else {
+              document.querySelector('#email').value += '@gmail.com'
             }
 
             form.classList.add('was-validated')

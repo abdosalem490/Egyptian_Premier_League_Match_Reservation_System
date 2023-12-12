@@ -61,10 +61,15 @@ app.use(session(sessionConfig));
 app.use(passport.initialize()); // init passport on every route call.
 app.use(passport.session());    // allow passport to use "express-session".
 
-
+// middleware for storing data
+app.use((req, res, next) => {
+    res.locals.current_user = req.user;
+    // res.locals.success = req.flash('success');
+    // res.locals.error = req.flash('error');
+    next();
+})
 
 // routes
-
 app.use('/', userRoutes);
 app.use('/matches', matchRoutes);
 app.use('/stadiums', stadiumRoutes);
@@ -77,13 +82,7 @@ passport.use(new LocalStrategy(User.authenticate()));   // for normal authentica
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// middleware for storing data
-app.use((req, res, next) => {
-    res.locals.current_user = req.user;
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
-    next();
-})
+
 
 // handle any non-existent page
 app.get('*', (req, res, next) => {
