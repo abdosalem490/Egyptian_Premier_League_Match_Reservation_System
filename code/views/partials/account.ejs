@@ -21,20 +21,31 @@
           Details
         </a>
       </li>
+      <% if(current_user.UserType === 'fan') { %>
       <li>
         <a href="/reserved_seats" class="nav-link text-white <%= current_page === 1 ? 'active' : '' %>">
           <i class="bi bi-grid-3x3-gap-fill me-2" width="16" height="16"></i>
           Reserved Seats
         </a>
       </li>
+      <% } %>
+      <% if(current_user.UserType === 'admin') { %>
       <li>
         <a href="/notifications" class="nav-link text-white <%= current_page === 2 ? 'active' : '' %>">
           <i class="bi bi-bell-fill me-2" width="16" height="16"></i>
           Notifications
+          <span class="ms-5 badge bg-info rounded-pill"><%= notificationNum %></span>
         </a>
       </li>
       <li>
-        <a href="/logout" class="nav-link text-white <%= current_page === 3 ? 'active' : '' %>">
+        <a href="/delete_user" class="nav-link text-white <%= current_page === 3 ? 'active' : '' %>">
+          <i class="bi bi-person-fill-dash" width="16" height="16"></i>
+          Delete Users
+        </a>
+      </li>
+      <% } %>
+      <li>
+        <a href="/logout" class="nav-link text-white <%= current_page === 4 ? 'active' : '' %>">
           <i class="bi bi-door-open-fill me-2" width="16" height="16"></i>
           Logout
         </a>
@@ -47,7 +58,7 @@
 </div>
 
 <style>
-  li:hover {
+  li a:hover {
     background-color: black !important;
   }
 </style>

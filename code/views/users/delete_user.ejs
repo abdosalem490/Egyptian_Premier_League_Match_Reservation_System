@@ -1,0 +1,63 @@
+<% layout('partials/account') -%> 
+<div class="row">
+    <% for(let user of users) { %>
+        <div class="card mt-3 ms-3 mb-2" style="width: 18rem;">
+            <img src="<%= user.ProfilePicture.url %>" class="card-img-top img-fluid rounded w-100" style="height: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title"><%= user.Username %></h5>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item list-group-item-light col-5" style="font-size: small;">FirstName</li>
+                    <li class="list-group-item flex-fill text-center"><%= user.FirstName %></li>
+                </ul>                
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item list-group-item-light col-5" style="font-size: small;">LastName</li>
+                    <li class="list-group-item flex-fill text-center"><%= user.LastName %></li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item list-group-item-light col-5" style="font-size: small;">BirthDate</li>
+                    <li class="list-group-item flex-fill text-center"><%= utils.formatDate(user.BirthDate) %></li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item list-group-item-light col-5" style="font-size: small;">Gender</li>
+                    <li class="list-group-item flex-fill text-center"><%= user.Gender %></li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item list-group-item-light col-5" style="font-size: small;">City</li>
+                    <li class="list-group-item flex-fill text-center"><%= user.City %></li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item list-group-item-light col-5" style="font-size: small;">Address</li>
+                    <li class="list-group-item flex-fill text-center" style="font-size: smaller;"><%= user.Address %></li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item list-group-item-light col-5" style="font-size: small;">Email</li>
+                    <li class="list-group-item flex-fill text-center text-break" style="font-size: smaller;"><%= user.Email %></li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item list-group-item-light col-5" style="font-size: small;">UserType</li>
+                    <li class="list-group-item flex-fill text-center text-break" style="font-size: smaller;"><%= user.UserType %></li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item list-group-item-light col-5" style="font-size: small;">Approved</li>
+                    <li class="list-group-item flex-fill text-center text-break" style="font-size: smaller;"><%= user.isApproved %></li>
+                </ul>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <form action="/account/<%= user._id %>?_method=DELETE" class="w-100 mt-auto" method="post">
+                    <button class="btn btn-danger w-100">Delete User</button>
+                </form>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+
+<div class="position-absolute top-50 start-50 translate-middle text-danger display-3" id="NO-RESULT" style="display: none;"">
+    NO RESULT
+</div>
+
+<script>
+    document.querySelector('input[type="search"]').addEventListener('input', (e) => {
+        displayOnlyUserSearchVal(e.target.value);
+    });
+</script>

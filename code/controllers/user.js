@@ -8,8 +8,6 @@ module.exports.showRegisterPage = async (req, res) => {
 }
 
 module.exports.addUserToBeApproved = async (req, res) => {
-    console.log(req.files);
-    console.log(req.body);
 
     // req.files.image.mv(__dirname + '/../public/resources/uploads/' + req.files.image.name);
     // images = req.files.map(file => ({ url: '/resources/uploads/' + file.filename, filename: file.filename }));
@@ -31,10 +29,13 @@ module.exports.addUserToBeApproved = async (req, res) => {
 
     const user_to_be_accepted = await User.register(user, req.body.password);
 
-    // TODO: add push notification
+    // TODO: show page to make him till till be approved
 
+    res.send({ path: '/account_error' });
+}
 
-    res.send({ path: '/matches' });
+module.exports.showErrMessage = async (req, res) => {
+    res.render('error', { title: 'Error', displaySearchInput: false, err_message: "wait till the admin approves you" })
 }
 
 module.exports.showLoginPage = async (req, res) => {
@@ -43,7 +44,17 @@ module.exports.showLoginPage = async (req, res) => {
 
 
 module.exports.login = async (req, res) => {
-    res.redirect('/matches');
+    const user = await User.find({ 'username': req.body.username });
+    if (user[0].isApproved) {
+        res.redirect('/matches');
+    } else {
+        req.logout((err) => {
+            if (err) {
+                return next(err);
+            }
+            res.redirect('/account_error');
+        })
+    }
 }
 
 
@@ -84,11 +95,38 @@ module.exports.modifyDetails = async (req, res) => {
 
 module.exports.showReservedSeats = async (req, res) => {
     const user = res.locals.current_user;
-    res.render('users/reserved_seats', { user, utils, current_page: 1, title: 'Notifications', displaySearchInput: false });
+    res.render('users/reserved_seats', { user, utils, current_page: 1, title: 'reserved seats', displaySearchInput: true });
 }
 
 module.exports.showNotifications = async (req, res) => {
-    const user = res.locals.current_user;
-    res.render('users/notifications', { user, utils, current_page: 2, title: 'Notifications', displaySearchInput: false });
+    const users = await User.find({ '_id': { $ne: res.locals.current_user._id }, 'isApproved': false });
+
+    users.sort((ele1, ele2) => {
+        return ele1.BirthDate - ele2.BirthDate;
+    });
+
+    res.render('users/notifications', { users, utils, current_page: 2, title: 'Notifications', displaySearchInput: true });
 }
 
+module.exports.deleteAccount = async (req, res) => {
+    await User.findByIdAndDelete(req.params.id);
+    res.redirect('/delete_user');
+}
+
+module.exports.showDeleteUserPage = async (req, res) => {
+    const users = await User.find({ '_id': { $ne: res.locals.current_user._id } });
+    users.sort((ele1, ele2) => {
+        return ele1.BirthDate - ele2.BirthDate;
+    });
+    res.render('users/delete_user', { users, utils, current_page: 3, title: 'delete user', displaySearchInput: true });
+}
+
+module.exports.disapproveUser = async (req, res) => {
+    await User.findByIdAndDelete(req.params.id);
+    res.redirect('/notifications');
+}
+
+module.exports.approveUser = async (req, res) => {
+    const user = await User.findByIdAndUpdate(req.params.id, { 'isApproved': true });
+    res.redirect('/notifications');
+}

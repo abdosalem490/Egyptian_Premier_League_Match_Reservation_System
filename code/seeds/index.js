@@ -54,7 +54,137 @@ const seedRun = async () => {
     });
 
     // user, pasword
-    await User.register(user, 'admin');
+    await User.register(user, 'admin'); // register admin
+
+    // regsiter some manager users
+    await User.register(new User({
+        'Username': 'abdo',
+        'FirstName': 'abdo',
+        'LastName': 'salem',
+        'BirthDate': new Date('2006-05-16'),
+        'Gender': 'male',
+        'City': 'Giza',
+        'Address': '14 abdelhamid street - Faisel - Giza',
+        'Email': 'abdosalm555@gmail.com',
+        'UserType': 'manager',
+        'ProfilePicture': {
+            'url': "https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWFsZXxlbnwwfHwwfHx8MA%3D%3D",
+            'filename': 'manager_profile1'
+        },
+        'isApproved': true,
+        'username': 'abdosalm@gmail.com'
+    }), 'password');
+
+    await User.register(new User({
+        'Username': 'Yusuf',
+        'FirstName': 'yusuf',
+        'LastName': 'said',
+        'BirthDate': new Date('2001-04-30'),
+        'Gender': 'Omnigender',
+        'City': 'Menoufia',
+        'Address': 'some menoufia address',
+        'Email': 'yusuf_said@gmail.com',
+        'UserType': 'manager',
+        'ProfilePicture': {
+            'url': 'https://plus.unsplash.com/premium_photo-1683121366070-5ceb7e007a97?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D',
+            'filename': 'manager_profile2'
+        },
+        'isApproved': true,
+        'username': 'yusuf_said@gmail.com'
+    }), 'password');
+
+    await User.register(new User({
+        'Username': 'Ahmed Fawzy',
+        'FirstName': 'ahmed',
+        'LastName': 'fawzy',
+        'BirthDate': new Date('2001-03-05'),
+        'Gender': 'Trans male',
+        'City': '6th October',
+        'Address': 'first district - october - Giza',
+        'Email': 'ahmedFawzy123@gmail.com',
+        'UserType': 'manager',
+        'ProfilePicture': {
+            'url': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D',
+            'filename': 'manager_profile3'
+        },
+        'isApproved': true,
+        'username': 'ahmedFawzy123@gmail.com'
+    }), 'password');
+
+
+    await User.register(new User({
+        'Username': 'Sabry Hassan',
+        'FirstName': 'Sabry',
+        'LastName': 'Hassan',
+        'BirthDate': new Date('2001-02-18'),
+        'Gender': 'female',
+        'City': 'Giza',
+        'Address': 'unKnown',
+        'Email': 'sabHs156@gmail.com',
+        'UserType': 'manager',
+        'ProfilePicture': {
+            'url': 'https://plus.unsplash.com/premium_photo-1669882305273-674eff6567af?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D',
+            'filename': 'manager_profile1'
+        },
+        'isApproved': false,
+        'username': 'sabHs156@gmail.com'
+    }), 'password');
+
+    // register some fan users
+    await User.register(new User({
+        'Username': 'Kathrin Steve',
+        'FirstName': 'Kathrin',
+        'LastName': 'Steve',
+        'BirthDate': new Date('1998-10-10'),
+        'Gender': 'female',
+        'City': 'Sohag',
+        'Address': '14 El nasr street - Sohag - Egypt',
+        'Email': 'kathSteve23@gmail.com',
+        'UserType': 'fan',
+        'ProfilePicture': {
+            'url': 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D',
+            'filename': 'fan_profile1'
+        },
+        'isApproved': true,
+        'username': 'kathSteve23@gmail.com'
+    }), 'password');
+
+    await User.register(new User({
+        'Username': 'Ahmed Soulem',
+        'FirstName': 'Ahmed',
+        'LastName': 'Soulem',
+        'BirthDate': new Date('1990-05-31'),
+        'Gender': 'Multigender',
+        'City': 'Aswan',
+        'Address': '36 Salah Salem street - Aswan - Egypt',
+        'Email': 'ahmedSoulem56@gmail.com',
+        'UserType': 'fan',
+        'ProfilePicture': {
+            'url': 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHVzZXJ8ZW58MHx8MHx8fDA%3D',
+            'filename': 'fan_profile2'
+        },
+        'isApproved': true,
+        'username': 'ahmedSoulem56@gmail.com'
+    }), 'password');
+
+    await User.register(new User({
+        'Username': 'Salah Montaser',
+        'FirstName': 'Salah',
+        'LastName': 'Montaser',
+        'BirthDate': new Date('2005-08-01'),
+        'Gender': 'male',
+        'City': 'Suez',
+        'Address': '36 Suez Canal street - Suez - Egypt',
+        'Email': 'slh123@gmail.com',
+        'UserType': 'fan',
+        'ProfilePicture': {
+            'url': 'https://images.unsplash.com/photo-1546961329-78bef0414d7c?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHVzZXJ8ZW58MHx8MHx8fDA%3D',
+            'filename': 'fan_profile3'
+        },
+        'isApproved': false,
+        'username': 'slh123@gmail.com'
+    }), 'password');
+
 
     for (let i = 0; i < stadiums.length; i++) {
         const stadium = new Stadium({

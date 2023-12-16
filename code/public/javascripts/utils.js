@@ -27,6 +27,36 @@ function displayOnlySearchVal(value) {
     }
 }
 
+
+function displayOnlyUserSearchVal(value) {
+    const users = document.querySelectorAll('.card');
+    let tempVal = value.trim().toLowerCase();
+    let displayedNumOfMatches = users.length;
+    if (tempVal !== "") {
+        for (let user of users) {
+            if (!user.querySelector('h5').innerText.toLowerCase().includes(tempVal)) {
+                user.style.display = 'none';
+                displayedNumOfMatches--;
+            }
+            else {
+                user.style.display = 'block';
+            }
+        }
+        if (displayedNumOfMatches === 0) {
+            document.querySelector('#NO-RESULT').style.display = 'block';
+        }
+        else {
+            document.querySelector('#NO-RESULT').style.display = 'none';
+        }
+    }
+    else {
+        for (let user of users) {
+            user.style.display = 'block';
+        }
+    }
+}
+
+
 function updateMapOnSelectingStadium() {
     mapboxgl.accessToken = mapToken;
 

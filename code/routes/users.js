@@ -13,10 +13,12 @@ router.route('/login')
     .get(users.showLoginPage)
     .post(passport.authenticate('local', { failureRedirect: '/login' }), users.login);
 
-// router.route('/users/:id/account')
 router.route('/account')
     .get(users.showAccountPage)
     .put(upload.array('image'), users.modifyDetails);
+
+router.route('/account/:id')
+    .delete(users.deleteAccount);
 
 router.route('/notifications')
     .get(users.showNotifications);
@@ -24,7 +26,20 @@ router.route('/notifications')
 router.route('/reserved_seats')
     .get(users.showReservedSeats);
 
+router.route('/delete_user')
+    .get(users.showDeleteUserPage);
+
 router.route('/logout')
     .get(users.logout);
+
+router.route('/account_error')
+    .get(users.showErrMessage);
+
+router.route('/account/:id/approve')
+    .put(users.approveUser);
+
+router.route('/account/:id/disapprove')
+    .put(users.disapproveUser);
+
 
 module.exports = router;

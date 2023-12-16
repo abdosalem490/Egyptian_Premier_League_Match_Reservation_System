@@ -18,24 +18,25 @@
                         <% }%>
                         <% if(displaySearchInput) { %>
                             <div class="mx-4">
-                                <input class="form-control" type="search" placeholder="Search Team" style="width: auto;">
+                                <input class="form-control" type="search" placeholder="Search" style="width: auto;">
                             </div>
                         <% } %>
                     
                     </nav>
 
-                    <nav class="navbar-nav shadow-lg col-auto ">
-                        
+                    <nav class="navbar-nav shadow-lg col-auto">
                         <% if(!current_user) { %>
-                        <a class="nav-link" href="/register">Signup</a>
-                        <a class="nav-link " href="/login">Login</a>
+                            <a class="nav-link" href="/register">Signup</a>
+                            <a class="nav-link " href="/login">Login</a>
                         <% } else { %>
-                        <a class="nav-link" href="/logout">Logout</a>
-                            <a class="nav-link me-2" href="/notifications">
-                                <!-- Notification -->
-                                <i class="bi bi-bell"></i>
-                                <sup class="badge bg-primary rounded-pill" id="notification-count">14</sup>
-                            </a>
+                            <a class="nav-link me-3" href="/logout">Logout</a>
+                            <% if(current_user.UserType === 'admin') { %>
+                                <a class="nav-link me-2" href="/notifications">
+                                    <!-- Notification -->
+                                    <i class="bi bi-bell"></i>
+                                    <sup class="badge bg-primary rounded-pill" id="notification-count"><%= notificationNum %></sup>
+                                </a>
+                            <% } %>
                             <a style="padding: 0;" class="nav-link navbar-brand" href="/account">
                                 <img class="rounded" width="40" height="35" src="<%= current_user.ProfilePicture.url %>">
                                 <sub class="fs-6 text-secondary" id="account-text"> Account </sub>

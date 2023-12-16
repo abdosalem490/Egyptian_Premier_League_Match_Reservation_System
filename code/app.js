@@ -13,6 +13,7 @@ const ejsMate = require('ejs-mate');    // To render HTML pages for login and pr
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
 
+
 // import files from same project
 const userRoutes = require('./routes/users');
 const matchRoutes = require('./routes/matches');
@@ -62,8 +63,10 @@ app.use(passport.initialize()); // init passport on every route call.
 app.use(passport.session());    // allow passport to use "express-session".
 
 // middleware for storing data
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     res.locals.current_user = req.user;
+    const unapprovedUsers = await User.find({ isApproved: false });
+    res.locals.notificationNum = unapprovedUsers.length;
     // res.locals.success = req.flash('success');
     // res.locals.error = req.flash('error');
     next();
