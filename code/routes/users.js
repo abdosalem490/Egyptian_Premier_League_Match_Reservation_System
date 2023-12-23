@@ -24,7 +24,8 @@ router.route('/notifications')
     .get(users.showNotifications);
 
 router.route('/reserved_seats')
-    .get(users.showReservedSeats);
+    .get(users.showReservedSeats)
+    .delete(users.cancelReservation);
 
 router.route('/delete_user')
     .get(users.showDeleteUserPage);

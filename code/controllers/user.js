@@ -29,8 +29,6 @@ module.exports.addUserToBeApproved = async (req, res) => {
 
     const user_to_be_accepted = await User.register(user, req.body.password);
 
-    // TODO: show page to make him till till be approved
-
     res.send({ path: '/account_error' });
 }
 
@@ -95,7 +93,8 @@ module.exports.modifyDetails = async (req, res) => {
 
 module.exports.showReservedSeats = async (req, res) => {
     const user = res.locals.current_user;
-    res.render('users/reserved_seats', { user, utils, current_page: 1, title: 'reserved seats', displaySearchInput: true });
+    current_date = new Date();
+    res.render('users/reserved_seats', { user, utils, current_date, current_page: 1, title: 'reserved seats', displaySearchInput: true });
 }
 
 module.exports.showNotifications = async (req, res) => {
@@ -129,4 +128,22 @@ module.exports.disapproveUser = async (req, res) => {
 module.exports.approveUser = async (req, res) => {
     const user = await User.findByIdAndUpdate(req.params.id, { 'isApproved': true });
     res.redirect('/notifications');
+}
+
+module.exports.cancelReservation = async (req, res) => {
+    res.locals.current_user;
+    const user = await User.findById(res.locals.current_user.id);
+    user.reservedSeats = user.reservedSeats.filter(ele => {
+        if (String(ele._id) === String(req.body.match_id)) {
+            ele.seatNumbers = ele.seatNumbers.filter(s => {
+                if (String(s.seat_num) !== String(req.body.seat_num)) {
+                    return s;
+                }
+            })
+            if (ele.seatNumbers.length)
+                return ele;
+        }
+    });
+    await user.save();
+    res.redirect('/reserved_seats');
 }

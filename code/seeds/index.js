@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const mongoose = require('mongoose');
-const { teams, stadiums, randomMaleNames, randomDescriptions, stadiumImages, stadiumLocations } = require('../constants');
+const { teams, stadiums, randomMaleNames, randomDescriptions, stadiumImages, stadiumLocations, randomCreditCardNumbers } = require('../constants');
 const Match = require('../models/match');
 const Stadium = require('../models/stadium')
 const User = require('../models/user')
@@ -29,11 +29,49 @@ const stadium_lengths = randomIntegerArray(30, 70, 50);
 const stadium_widths = randomIntegerArray(30, 70, 50);
 
 let stad_ids = []
+let match_ids = []
 
 const seedRun = async () => {
     await Match.deleteMany({});
     await Stadium.deleteMany({});
     await User.deleteMany({});
+
+    for (let i = 0; i < stadiums.length; i++) {
+        const stadium = new Stadium({
+            stadiumName: stadiums[i],
+            images: [
+                { filename: 'match1', url: randomElement(stadiumImages) },
+                { filename: 'match2', url: randomElement(stadiumImages) },
+                { filename: 'match3', url: randomElement(stadiumImages) },
+            ],
+            coordinates: stadiumLocations[stadiums[i]],
+            length: randomElement(stadium_lengths),
+            width: randomElement(stadium_widths)
+        })
+        let res = await stadium.save();
+        stad_ids.push(res.id);
+    }
+
+    for (let i = 0; i < 50; i++) {
+        const home_team = randomElement(teams);
+        const currentDate = new Date();
+        const monthAfter = new Date();
+        monthAfter.setMonth(monthAfter.getMonth() + 1);
+        const match = new Match({
+            homeTeam: home_team,
+            awayTeam: randEnemyTeam(home_team, teams),
+            matchVenue: randomElement(stad_ids),
+            matchDate: randomDate(currentDate, monthAfter),
+            mainReferee: randomElement(randomMaleNames),
+            description: randomElement(randomDescriptions),
+            linesmen: [
+                randomElement(randomMaleNames),
+                randomElement(randomMaleNames),
+            ]
+        })
+        let res = await match.save();
+        match_ids.push(res.id)
+    }
 
     const user = new User({
         'Username': 'admin',
@@ -50,7 +88,20 @@ const seedRun = async () => {
             'filename': 'admin_profile'
         },
         'isApproved': true,
-        'username': 'admin@gmail.com'
+        'username': 'admin@gmail.com',
+        'creditCards': [
+            { 'creditNumber': randomElement(randomCreditCardNumbers) }
+        ],
+        'reservedSeats': [
+            {
+                'match': randomElement(match_ids),
+                'seatNumbers': [
+                    { 'seat_num': 0 },
+                    { 'seat_num': 1 }
+                ]
+            }
+        ],
+
     });
 
     // user, pasword
@@ -72,7 +123,20 @@ const seedRun = async () => {
             'filename': 'manager_profile1'
         },
         'isApproved': true,
-        'username': 'abdosalm@gmail.com'
+        'username': 'abdosalm@gmail.com',
+        'creditCards': [
+            { 'creditNumber': randomElement(randomCreditCardNumbers) }
+        ],
+        'reservedSeats': [
+            {
+                'match': randomElement(match_ids),
+                'seatNumbers': [
+                    { 'seat_num': 2 },
+                    { 'seat_num': 3 }
+                ]
+            }
+        ],
+
     }), 'password');
 
     await User.register(new User({
@@ -90,7 +154,20 @@ const seedRun = async () => {
             'filename': 'manager_profile2'
         },
         'isApproved': true,
-        'username': 'yusuf_said@gmail.com'
+        'username': 'yusuf_said@gmail.com',
+        'creditCards': [
+            { 'creditNumber': randomElement(randomCreditCardNumbers) }
+        ],
+        'reservedSeats': [
+            {
+                'match': randomElement(match_ids),
+                'seatNumbers': [
+                    { 'seat_num': 4 },
+                    { 'seat_num': 5 }
+                ]
+            }
+        ],
+
     }), 'password');
 
     await User.register(new User({
@@ -108,7 +185,20 @@ const seedRun = async () => {
             'filename': 'manager_profile3'
         },
         'isApproved': true,
-        'username': 'ahmedFawzy123@gmail.com'
+        'username': 'ahmedFawzy123@gmail.com',
+        'creditCards': [
+            { 'creditNumber': randomElement(randomCreditCardNumbers) }
+        ],
+        'reservedSeats': [
+            {
+                'match': randomElement(match_ids),
+                'seatNumbers': [
+                    { 'seat_num': 6 },
+                    { 'seat_num': 7 }
+                ]
+            }
+        ],
+
     }), 'password');
 
 
@@ -127,7 +217,20 @@ const seedRun = async () => {
             'filename': 'manager_profile1'
         },
         'isApproved': false,
-        'username': 'sabHs156@gmail.com'
+        'username': 'sabHs156@gmail.com',
+        'creditCards': [
+            { 'creditNumber': randomElement(randomCreditCardNumbers) }
+        ],
+        'reservedSeats': [
+            {
+                'match': randomElement(match_ids),
+                'seatNumbers': [
+                    { 'seat_num': 8 },
+                    { 'seat_num': 9 }
+                ]
+            }
+        ],
+
     }), 'password');
 
     // register some fan users
@@ -146,7 +249,20 @@ const seedRun = async () => {
             'filename': 'fan_profile1'
         },
         'isApproved': true,
-        'username': 'kathSteve23@gmail.com'
+        'username': 'kathSteve23@gmail.com',
+        'creditCards': [
+            { 'creditNumber': randomElement(randomCreditCardNumbers) }
+        ],
+        'reservedSeats': [
+            {
+                'match': randomElement(match_ids),
+                'seatNumbers': [
+                    { 'seat_num': 10 },
+                    { 'seat_num': 11 }
+                ]
+            }
+        ],
+
     }), 'password');
 
     await User.register(new User({
@@ -164,7 +280,20 @@ const seedRun = async () => {
             'filename': 'fan_profile2'
         },
         'isApproved': true,
-        'username': 'ahmedSoulem56@gmail.com'
+        'username': 'ahmedSoulem56@gmail.com',
+        'creditCards': [
+            { 'creditNumber': randomElement(randomCreditCardNumbers) }
+        ],
+        'reservedSeats': [
+            {
+                'match': randomElement(match_ids),
+                'seatNumbers': [
+                    { 'seat_num': 12 },
+                    { 'seat_num': 13 }
+                ]
+            }
+        ],
+
     }), 'password');
 
     await User.register(new User({
@@ -182,45 +311,23 @@ const seedRun = async () => {
             'filename': 'fan_profile3'
         },
         'isApproved': false,
-        'username': 'slh123@gmail.com'
+        'username': 'slh123@gmail.com',
+        'creditCards': [
+            { 'creditNumber': randomElement(randomCreditCardNumbers) }
+        ],
+        'reservedSeats': [
+            {
+                'match': randomElement(match_ids),
+                'seatNumbers': [
+                    { 'seat_num': 14 },
+                    { 'seat_num': 15 }
+                ]
+            }
+        ],
+
     }), 'password');
 
 
-    for (let i = 0; i < stadiums.length; i++) {
-        const stadium = new Stadium({
-            stadiumName: stadiums[i],
-            images: [
-                { filename: 'match1', url: randomElement(stadiumImages) },
-                { filename: 'match2', url: randomElement(stadiumImages) },
-                { filename: 'match3', url: randomElement(stadiumImages) },
-            ],
-            coordinates: stadiumLocations[stadiums[i]],
-            length: randomElement(stadium_lengths),
-            width: randomElement(stadium_widths)
-        })
-        res = await stadium.save();
-        stad_ids.push(res.id);
-    }
-
-    for (let i = 0; i < 50; i++) {
-        const home_team = randomElement(teams);
-        const currentDate = new Date();
-        const monthAfter = new Date();
-        monthAfter.setMonth(monthAfter.getMonth() + 1);
-        const match = new Match({
-            homeTeam: home_team,
-            awayTeam: randEnemyTeam(home_team, teams),
-            matchVenue: randomElement(stad_ids),
-            matchDate: randomDate(currentDate, monthAfter),
-            mainReferee: randomElement(randomMaleNames),
-            description: randomElement(randomDescriptions),
-            linesmen: [
-                randomElement(randomMaleNames),
-                randomElement(randomMaleNames),
-            ]
-        })
-        await match.save();
-    }
 }
 
 seedRun().then(() => {

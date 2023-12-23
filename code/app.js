@@ -64,7 +64,16 @@ app.use(passport.session());    // allow passport to use "express-session".
 
 // middleware for storing data
 app.use(async (req, res, next) => {
-    res.locals.current_user = req.user;
+    const user = await User.findById(req.user.id).populate([
+        {
+            path: 'reservedSeats',
+            populate: [{
+                path: 'match',
+                populate: [{ path: 'matchVenue' }]
+            }]
+        }
+    ]);
+    res.locals.current_user = user;
     const unapprovedUsers = await User.find({ isApproved: false });
     res.locals.notificationNum = unapprovedUsers.length;
     // res.locals.success = req.flash('success');

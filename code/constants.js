@@ -48,6 +48,25 @@ module.exports.stadiumLocations = {
 module.exports.randomMaleNames = ['Draven', 'Kareem', 'Myles', 'Emmett', 'Will', 'Jaydan', 'Fisher', 'Zaire', 'Ali', 'Isaias', 'Randall', 'Jack',
     'Yair', 'Quincy', 'Jaquan', 'Alvin', 'Cristian', 'Jakobe', 'Lincoln', 'Brogan', 'Hitler', 'stalin']
 
+module.exports.randomCreditCardNumbers = [
+    '1234567890123456',
+    '9876543210987654',
+    '2468135791357924',
+    '8642097531092764',
+    '1357924680246813',
+    '5793108654321098',
+    '0123456789876543',
+    '5678901234567890',
+    '9876543210123456',
+    '5432109876543210',
+    '3210987654321098',
+    '8901234567890123',
+    '4567890123456789',
+    '0123456789012345',
+    '7890123456789012',
+    '2345678901234567',
+]
+
 module.exports.randomDescriptions = [
     'A clash of titans',
     'A battle of wits and athleticism',

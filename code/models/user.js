@@ -52,7 +52,25 @@ const UserSchema = new Schema({
     isApproved: {
         type: Boolean,
         default: false
-    }
+    },
+    reservedSeats: [
+        {
+            match: {
+                type: Schema.Types.ObjectId,
+                ref: 'Match',
+            },
+            seatNumbers: [
+                {
+                    seat_num: Number
+                }
+            ]
+        }
+    ],
+    creditCards: [
+        {
+            creditNumber: String
+        }
+    ]
 });
 
 
