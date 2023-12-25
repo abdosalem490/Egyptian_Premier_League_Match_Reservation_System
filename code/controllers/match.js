@@ -2,6 +2,7 @@ const Match = require('../models/match');
 const Stadium = require('../models/stadium');
 const utils = require('../utils/time_formatter');
 const { teams } = require('../constants');
+const Seat = require('../models/seat');
 
 
 
@@ -20,7 +21,7 @@ module.exports.mainPage = async (req, res) => {
 
 module.exports.showMatch = async (req, res) => {
     const match = await Match.findById(req.params.id).populate('matchVenue')
-    res.render('matches/view', { match, utils, title: 'View Match', displaySearchInput: false });
+    res.render('matches/view', { match, utils, title: 'View Match', displaySearchInput: false }); // render the html page (ejs file)
 
 }
 
@@ -73,7 +74,37 @@ module.exports.updateMatch = async (req, res) => {
 
 }
 
+// module.exports.showSeats = async (req, res) => {
+//     const match = await Match.findById(req.params.id).populate('matchVenue');
+//     res.render('matches/seats_view', { match, title: 'view seats', displaySearchInput: false })
+
+// } 
+
+// TODO: add the PUT route for the seats
+// Put--> modify
+// Post --> create
 module.exports.showSeats = async (req, res) => {
-    const match = await Match.findById(req.params.id).populate('matchVenue');
-    res.render('matches/seats_view', { match, title: 'view seats', displaySearchInput: false })
-} 
+    try {
+        const match = await Match.findById(req.params.id).populate('matchVenue');
+        const seats = await Seat.find({ match: req.params.id });
+        res.render('matches/seats_view', { match, seats, title: 'View Seats', displaySearchInput: false });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+module.exports.reserveSeat = async (req, res) => {
+    const { selectedSeats } = req.body;
+
+    try {
+        // Add logic to update the reservation status of the selected seats in the database
+        // Example: Update the 'isReserved' field of each seat in the selectedSeats array
+        await Seat.updateMany({ _id: { $in: selectedSeats } }, { isReserved: true });
+
+        res.send({ success: true, message: 'Seats reserved successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ success: false, message: 'Error reserving seats' });
+    }
+}
