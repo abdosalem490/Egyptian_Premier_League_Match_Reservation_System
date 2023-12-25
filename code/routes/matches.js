@@ -20,6 +20,8 @@ router.route('/:id/edit')
     .get(matches.showEditMatch);
 
 router.route('/:id/view_seats')
-    .get(matches.showSeats);
+    .get(matches.showSeats)
+    // TODO: add the post route for the seats
+    .put(matches.reserveSeat);  // New route for seat reservation
 
 module.exports = router;

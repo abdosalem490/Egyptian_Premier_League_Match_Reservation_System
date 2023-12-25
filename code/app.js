@@ -50,7 +50,7 @@ const sessionConfig = {
 }
 
 
-// middlewares
+// middlewares  --> modify the request and response objects
 app.use(express.urlencoded({ extended: true }));  // to parse coming POST and PUT requests
 app.use(express.json());
 app.use(methodOverride('_method'));
