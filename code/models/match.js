@@ -36,7 +36,8 @@ const matchSchema = new Schema({
         {
             type: String,
         }
-    ]
+    ],
+    reservedSeats: [Number]
 });
 
 // export the model

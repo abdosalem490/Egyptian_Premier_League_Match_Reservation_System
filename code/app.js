@@ -12,6 +12,7 @@ const path = require('path');
 const ejsMate = require('ejs-mate');    // To render HTML pages for login and profile
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
+const { Server } = require('socket.io');
 
 
 // import files from same project
@@ -64,20 +65,25 @@ app.use(passport.session());    // allow passport to use "express-session".
 
 // middleware for storing data
 app.use(async (req, res, next) => {
-    const user = await User.findById(req.user.id).populate([
-        {
-            path: 'reservedSeats',
-            populate: [{
-                path: 'match',
-                populate: [{ path: 'matchVenue' }]
-            }]
-        }
-    ]);
-    res.locals.current_user = user;
-    const unapprovedUsers = await User.find({ isApproved: false });
-    res.locals.notificationNum = unapprovedUsers.length;
-    // res.locals.success = req.flash('success');
-    // res.locals.error = req.flash('error');
+
+    if (req.user) {
+        const user = await User.findById(req.user.id).populate([
+            {
+                path: 'reservedSeats',
+                populate: [{
+                    path: 'match',
+                    populate: [{ path: 'matchVenue' }]
+                }]
+            }
+        ]);
+        res.locals.current_user = user;
+        const unapprovedUsers = await User.find({ isApproved: false });
+        res.locals.notificationNum = unapprovedUsers.length;
+    } else {
+        res.locals.current_user = null;
+    }
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
     next();
 })
 
@@ -103,6 +109,21 @@ app.get('*', (req, res, next) => {
 })
 
 // begin listening to the ports
-app.listen(process.env.PORT_NUM, () => {
+const server = app.listen(process.env.PORT_NUM, () => {
     console.log(`Begun Listening to port ${process.env.PORT_NUM}`)
 });
+
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:5500"
+    }
+})
+
+io.on('connection', socket => {
+    console.log(`User ${socket.id} connected`)
+
+    // socket.on('message', data => {
+    //     console.log(data)
+    //     io.emit('message', `${socket.id.substring(0, 5)}: ${data}`)
+    // })
+})

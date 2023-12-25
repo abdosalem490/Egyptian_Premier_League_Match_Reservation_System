@@ -1,3 +1,108 @@
 <% layout('layouts/boilerplate') -%> 
 
-TEST
+<!-- views/matches/seats_view.ejs -->
+
+<style>
+    /* Add seat styling */
+    .seat {
+        width: 30px;
+        height: 30px;
+        margin: 3px;
+        display: inline-block;
+        background-color: lightgray;
+        border: 1px solid gray;
+        border-radius: 5px;
+    }
+    .not-reserved:hover {
+        background-color: aliceblue;
+    }
+    .reserved {
+        background-color: red;
+    }
+    .to-be-reserved {
+        background-color: red;
+    }
+
+    /* .overflow {
+        overflow-x: scroll;
+    } */
+</style>
+
+<div class="ms-3">
+    <h1><%= title %></h1>
+    <p>Match Details: <%= match.homeTeam %> vs <%= match.awayTeam %> at <%= match.matchVenue.stadiumName %></p>
+
+    <form id="seatReservationForm" class="mb-3 text-center" action="/matches/<%= match._id %>/view_seats?_method=PUT" method="post">
+        <div>
+            <% for (let i =  0; i < match.matchVenue.length; i += 1) { %>
+                <div class="" style="white-space: nowrap;">
+                    <% for (let j =  0; j < match.matchVenue.width; j += 1) { %>
+                        <% id = i * match.matchVenue.length + j %>
+                        <% seat = {_id: id, isReserved: match.reservedSeats.includes(id) } %>
+                        <label for="<%= `seat-${seat._id}` %>">
+                            <input type="checkbox" name="reservedSeats" onclick="reserveSeat('<%= seat._id %>')" value="<%= seat._id %>" id="<%= `seat-${seat._id}` %>" <%= seat.isReserved ? 'checked' : '' %> hidden>
+                            <div style="font-size: small;" class="seat <%= seat.isReserved ? 'reserved' : 'not-reserved' %>" data-seat-id="<%= seat._id %>" ><%= seat._id %></div>
+                        </label>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+
+        <button class="btn btn-info btn-lg mt-3" type="submit">Reserve Selected Seats</button>
+    </form>
+</div>
+
+<script>
+
+    let reservedSeats = []
+    
+    function reserveSeat(id) {
+        if(!document.querySelector(`div[data-seat-id="${id}"]`).classList.contains('reserved')) 
+        {
+            document.querySelector(`div[data-seat-id="${id}"]`).classList.toggle('to-be-reserved')
+
+            if(reservedSeats.includes(id)) {
+                reservedSeats = reservedSeats.filter(ele => ele != id )
+            } else {
+                reservedSeats.push(id);
+            }
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const seatForm = document.getElementById('seatReservationForm');
+        seatForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(seatForm);
+            const selectedSeats = formData.getAll('reservedSeats');
+            
+            if(reservedSeats.length){
+                // Add logic to send a request to reserve the selected seats
+                fetch(`/matches/<%= match._id %>/view_seats`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ reservedSeats }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Seats reserved successfully!');
+                        location.reload(); // Refresh the page after successful reservation
+                    } else {
+                        alert('Error reserving seats. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Error reserving seats. Please try again.');
+                });
+            } else {
+                alert('Select Seats');
+            }
+        });
+    });
+</script>
+

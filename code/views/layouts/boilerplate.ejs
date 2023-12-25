@@ -17,7 +17,10 @@
   </head>
   <body>
     <%- include('../partials/navbar.ejs') %>
-    <main class=" mt-1" style="min-height: 100vh;" id="main"><%- body %></main>
+    <main class=" mt-1" style="min-height: 100vh;" id="main">
+      <%- include('../partials/flash')%>
+      <%- body %>
+    </main>
     <%- include('../partials/footer.ejs') %>
 
     <script

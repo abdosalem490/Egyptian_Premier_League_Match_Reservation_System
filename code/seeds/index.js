@@ -31,6 +31,8 @@ const stadium_widths = randomIntegerArray(30, 70, 50);
 let stad_ids = []
 let match_ids = []
 
+
+
 const seedRun = async () => {
     await Match.deleteMany({});
     await Stadium.deleteMany({});
@@ -73,6 +75,9 @@ const seedRun = async () => {
         match_ids.push(res.id)
     }
 
+    // get random match
+    let dummyMatch = randomElement(match_ids)
+
     const user = new User({
         'Username': 'admin',
         'FirstName': 'admin',
@@ -94,20 +99,20 @@ const seedRun = async () => {
         ],
         'reservedSeats': [
             {
-                'match': randomElement(match_ids),
-                'seatNumbers': [
-                    { 'seat_num': 0 },
-                    { 'seat_num': 1 }
-                ]
+                'match': dummyMatch,
+                'seatNumbers': [0, 1]
             }
         ],
-
     });
+    let tempMatch = await Match.findById(dummyMatch);
+    tempMatch.reservedSeats.push(0, 1);
+    await tempMatch.save();
 
     // user, pasword
     await User.register(user, 'admin'); // register admin
 
     // regsiter some manager users
+    dummyMatch = randomElement(match_ids)
     await User.register(new User({
         'Username': 'abdo',
         'FirstName': 'abdo',
@@ -129,16 +134,19 @@ const seedRun = async () => {
         ],
         'reservedSeats': [
             {
-                'match': randomElement(match_ids),
-                'seatNumbers': [
-                    { 'seat_num': 2 },
-                    { 'seat_num': 3 }
-                ]
+                'match': dummyMatch,
+                'seatNumbers': [2, 3]
             }
         ],
 
     }), 'password');
 
+    tempMatch = await Match.findById(dummyMatch);
+    tempMatch.reservedSeats.push(2, 3);
+    await tempMatch.save();
+
+
+    dummyMatch = randomElement(match_ids)
     await User.register(new User({
         'Username': 'Yusuf',
         'FirstName': 'yusuf',
@@ -160,16 +168,18 @@ const seedRun = async () => {
         ],
         'reservedSeats': [
             {
-                'match': randomElement(match_ids),
-                'seatNumbers': [
-                    { 'seat_num': 4 },
-                    { 'seat_num': 5 }
-                ]
+                'match': dummyMatch,
+                'seatNumbers': [4, 5]
             }
         ],
 
     }), 'password');
+    tempMatch = await Match.findById(dummyMatch);
+    tempMatch.reservedSeats.push(4, 5);
+    await tempMatch.save();
 
+
+    dummyMatch = randomElement(match_ids)
     await User.register(new User({
         'Username': 'Ahmed Fawzy',
         'FirstName': 'ahmed',
@@ -191,17 +201,17 @@ const seedRun = async () => {
         ],
         'reservedSeats': [
             {
-                'match': randomElement(match_ids),
-                'seatNumbers': [
-                    { 'seat_num': 6 },
-                    { 'seat_num': 7 }
-                ]
+                'match': dummyMatch,
+                'seatNumbers': [6, 7]
             }
         ],
 
     }), 'password');
+    tempMatch = await Match.findById(dummyMatch);
+    tempMatch.reservedSeats.push(6, 7);
+    await tempMatch.save();
 
-
+    dummyMatch = randomElement(match_ids)
     await User.register(new User({
         'Username': 'Sabry Hassan',
         'FirstName': 'Sabry',
@@ -223,17 +233,18 @@ const seedRun = async () => {
         ],
         'reservedSeats': [
             {
-                'match': randomElement(match_ids),
-                'seatNumbers': [
-                    { 'seat_num': 8 },
-                    { 'seat_num': 9 }
-                ]
+                'match': dummyMatch,
+                'seatNumbers': [8, 9]
             }
         ],
 
     }), 'password');
+    tempMatch = await Match.findById(dummyMatch);
+    tempMatch.reservedSeats.push(8, 9);
+    await tempMatch.save();
 
     // register some fan users
+    dummyMatch = randomElement(match_ids)
     await User.register(new User({
         'Username': 'Kathrin Steve',
         'FirstName': 'Kathrin',
@@ -255,16 +266,17 @@ const seedRun = async () => {
         ],
         'reservedSeats': [
             {
-                'match': randomElement(match_ids),
-                'seatNumbers': [
-                    { 'seat_num': 10 },
-                    { 'seat_num': 11 }
-                ]
+                'match': dummyMatch,
+                'seatNumbers': [10, 11]
             }
         ],
 
     }), 'password');
+    tempMatch = await Match.findById(dummyMatch);
+    tempMatch.reservedSeats.push(10, 11);
+    await tempMatch.save();
 
+    dummyMatch = randomElement(match_ids)
     await User.register(new User({
         'Username': 'Ahmed Soulem',
         'FirstName': 'Ahmed',
@@ -286,16 +298,17 @@ const seedRun = async () => {
         ],
         'reservedSeats': [
             {
-                'match': randomElement(match_ids),
-                'seatNumbers': [
-                    { 'seat_num': 12 },
-                    { 'seat_num': 13 }
-                ]
+                'match': dummyMatch,
+                'seatNumbers': [12, 13]
             }
         ],
 
     }), 'password');
+    tempMatch = await Match.findById(dummyMatch);
+    tempMatch.reservedSeats.push(12, 13);
+    await tempMatch.save();
 
+    dummyMatch = randomElement(match_ids)
     await User.register(new User({
         'Username': 'Salah Montaser',
         'FirstName': 'Salah',
@@ -317,16 +330,15 @@ const seedRun = async () => {
         ],
         'reservedSeats': [
             {
-                'match': randomElement(match_ids),
-                'seatNumbers': [
-                    { 'seat_num': 14 },
-                    { 'seat_num': 15 }
-                ]
+                'match': dummyMatch,
+                'seatNumbers': [14, 15]
             }
         ],
 
     }), 'password');
-
+    tempMatch = await Match.findById(dummyMatch);
+    tempMatch.reservedSeats.push(14, 15);
+    await tempMatch.save();
 
 }
 

@@ -20,6 +20,7 @@ router.route('/:id/edit')
     .get(matches.showEditMatch);
 
 router.route('/:id/view_seats')
-    .get(matches.showSeats);
+    .get(matches.showSeats)
+    .put(matches.reserveSeat);  // New route for seat reservation
 
 module.exports = router;

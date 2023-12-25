@@ -2,6 +2,7 @@ const passport = require('passport'); // for authentication
 const User = require('../models/user'); // for the user model
 const { genders, roles } = require('../constants');
 const utils = require('../utils/time_formatter');
+const Match = require('../models/match');
 
 module.exports.showRegisterPage = async (req, res) => {
     res.render('users/register', { title: 'Register', genders: genders, roles: roles, displaySearchInput: false })
@@ -9,8 +10,7 @@ module.exports.showRegisterPage = async (req, res) => {
 
 module.exports.addUserToBeApproved = async (req, res) => {
 
-    // req.files.image.mv(__dirname + '/../public/resources/uploads/' + req.files.image.name);
-    // images = req.files.map(file => ({ url: '/resources/uploads/' + file.filename, filename: file.filename }));
+    req.flash('success', 'wait till be approved');
 
     const user = new User({
         'username': req.body.email, // this is for passport authentication
@@ -44,12 +44,14 @@ module.exports.showLoginPage = async (req, res) => {
 module.exports.login = async (req, res) => {
     const user = await User.find({ 'username': req.body.username });
     if (user[0].isApproved) {
+        req.flash('success', 'welcome back!');
         res.redirect('/matches');
     } else {
         req.logout((err) => {
             if (err) {
                 return next(err);
             }
+            req.flash('error', 'Not Approved Yet!');
             res.redirect('/account_error');
         })
     }
@@ -57,7 +59,7 @@ module.exports.login = async (req, res) => {
 
 
 module.exports.showAccountPage = async (req, res) => {
-    // const user = User.findById(req.params.id);
+
     const user = res.locals.current_user;
     res.render('users/details', { user, genders, current_page: 0, utils, title: 'Account', displaySearchInput: false })
 }
@@ -67,7 +69,7 @@ module.exports.logout = (req, res) => {
         if (err) {
             return next(err);
         }
-        // req.flash('success', 'Goodbye!');
+        req.flash('success', 'Goodbye!');
         res.redirect('/');
     });
 }
@@ -88,6 +90,7 @@ module.exports.modifyDetails = async (req, res) => {
         data_to_update['ProfilePicture'] = { url: '/resources/uploads/' + req.files[0].filename, filename: req.files[0].filename };
     }
     await user.updateOne(data_to_update);
+    req.flash('success', 'data was updated successfully');
     res.redirect('/account');
 }
 
@@ -109,6 +112,7 @@ module.exports.showNotifications = async (req, res) => {
 
 module.exports.deleteAccount = async (req, res) => {
     await User.findByIdAndDelete(req.params.id);
+    req.flash('success', 'account was deleted successfully');
     res.redirect('/delete_user');
 }
 
@@ -122,28 +126,42 @@ module.exports.showDeleteUserPage = async (req, res) => {
 
 module.exports.disapproveUser = async (req, res) => {
     await User.findByIdAndDelete(req.params.id);
+    req.flash('success', 'user was disapproved successfully');
     res.redirect('/notifications');
 }
 
 module.exports.approveUser = async (req, res) => {
     const user = await User.findByIdAndUpdate(req.params.id, { 'isApproved': true });
+    req.flash('success', 'user was approved successfully');
     res.redirect('/notifications');
 }
 
 module.exports.cancelReservation = async (req, res) => {
     res.locals.current_user;
+    let matchID = null;
+
     const user = await User.findById(res.locals.current_user.id);
     user.reservedSeats = user.reservedSeats.filter(ele => {
         if (String(ele._id) === String(req.body.match_id)) {
             ele.seatNumbers = ele.seatNumbers.filter(s => {
-                if (String(s.seat_num) !== String(req.body.seat_num)) {
+                if (String(s) !== String(req.body.seat_num)) {
                     return s;
+                } else {
+                    matchID = ele.match;
                 }
             })
             if (ele.seatNumbers.length)
                 return ele;
         }
     });
+
     await user.save();
+
+
+    const match = await Match.findById(matchID);
+    match.reservedSeats.splice(match.reservedSeats.indexOf(req.body.seat_num), 1);
+    await match.save();
+
+    // req.flash('success', 'reservation was canceled successfully');
     res.redirect('/reserved_seats');
 }

@@ -1,8 +1,8 @@
 const Match = require('../models/match');
 const Stadium = require('../models/stadium');
+const User = require('../models/user'); // for the user model
 const utils = require('../utils/time_formatter');
 const { teams } = require('../constants');
-
 
 
 module.exports.mainPage = async (req, res) => {
@@ -25,7 +25,8 @@ module.exports.showMatch = async (req, res) => {
 }
 
 module.exports.deleteMatch = async (req, res) => {
-    await Match.findByIdAndDelete(req.params.id)
+    await Match.findByIdAndDelete(req.params.id);
+    req.flash('success', 'match was deleted successfully');
     res.redirect('/matches');
 }
 
@@ -47,6 +48,7 @@ module.exports.addMatch = async (req, res) => {
         'linesmen': [match_received.firstLinesman, match_received.secondLinesman],
     });
     await match.save();
+    req.flash('success', 'match was added successfully');
     res.send({ redirect: '/matches' });
 }
 
@@ -76,4 +78,42 @@ module.exports.updateMatch = async (req, res) => {
 module.exports.showSeats = async (req, res) => {
     const match = await Match.findById(req.params.id).populate('matchVenue');
     res.render('matches/seats_view', { match, title: 'view seats', displaySearchInput: false })
-} 
+}
+
+module.exports.reserveSeat = async (req, res) => {
+    const { reservedSeats } = req.body;
+    const match = await Match.findById(req.params.id);
+    const user = await User.findById(res.locals.current_user.id)
+
+    const areReserved = match.reservedSeats.some(element => {
+        return reservedSeats.includes(element);
+    });
+
+    if (areReserved) {
+        res.status(500).send({ success: false, message: 'Error reserving seats' });
+    }
+    else {
+        match.reservedSeats.push(...reservedSeats);
+        await match.save();
+
+        const isMatchPresent = user.reservedSeats.some(element => {
+            return String(element.match) === String(req.params.id);
+        });
+
+        if (isMatchPresent) {
+            user.reservedSeats.map(m => {
+                if (String(m.match) === String(req.params.id)) {
+                    m.seatNumbers.push(...reservedSeats);
+                }
+            })
+        } else {
+            user.reservedSeats.push({
+                'match': match._id,
+                'seatNumbers': reservedSeats
+            });
+        }
+        await user.save();
+
+        res.send({ success: true, message: 'Seats reserved successfully' });
+    }
+}

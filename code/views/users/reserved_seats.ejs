@@ -65,14 +65,14 @@
                 </ul>
                 <% for (let seat of reservedSeat.seatNumbers) { %>
                     <ul class="list-group list-group-horizontal list-group-item-light">
-                        <li class="list-group-item w-25"><%= seat.seat_num %></li>
-                        <li class="list-group-item w-25"><%= Math.floor(seat.seat_num / match.matchVenue.width) %></li>
-                        <li class="list-group-item w-25"><%= seat.seat_num % match.matchVenue.width %></li>
+                        <li class="list-group-item w-25"><%= seat %></li>
+                        <li class="list-group-item w-25"><%= Math.floor(seat / match.matchVenue.width) %></li>
+                        <li class="list-group-item w-25"><%= seat % match.matchVenue.width %></li>
                         <li class="list-group-item w-25">
                             <% if((match.matchDate - current_date) / (1000 * 60 * 60 * 24) >= 3) { %>
                             <form action="/reserved_seats?_method=DELETE" method="post">
                                 <input type="hidden" value="<%= reservedSeat._id %>" name="match_id">
-                                <input type="hidden" value="<%= seat.seat_num %>" name="seat_num">
+                                <input type="hidden" value="<%= seat %>" name="seat_num">
                                 <button class="btn btn-danger">Cancel Reservation</button>
                             </form>
                             <% } else { %>

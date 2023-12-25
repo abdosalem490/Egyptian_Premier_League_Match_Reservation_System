@@ -21,6 +21,7 @@ module.exports.addStadium = async (req, res) => {
             };
             const stadium = new Stadium(newStadium);
             await stadium.save();
+            req.flash('success', 'stadium was created successfully');
             res.redirect('/matches');
         });
 }

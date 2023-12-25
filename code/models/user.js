@@ -59,11 +59,7 @@ const UserSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: 'Match',
             },
-            seatNumbers: [
-                {
-                    seat_num: Number
-                }
-            ]
+            seatNumbers: [Number]
         }
     ],
     creditCards: [
