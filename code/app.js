@@ -20,12 +20,15 @@ const userRoutes = require('./routes/users');
 const matchRoutes = require('./routes/matches');
 const stadiumRoutes = require('./routes/stadiums');
 const User = require('./models/user');
+const { createServer } = require('node:http');
 
 // connect to the database (mongodb)
 mongoose.connect(process.env.DB_URL);
 
 // utilities from the dependencies
 const app = express();  // to use express server utilities
+const server = createServer(app);
+const io = new Server(server);
 
 // to render pages 
 app.engine('ejs', ejsMate)
@@ -65,8 +68,8 @@ app.use(passport.session());    // allow passport to use "express-session".
 
 // middleware for storing data
 app.use(async (req, res, next) => {
-
     if (req.user) {
+        res.locals.io = io;
         const user = await User.findById(req.user.id).populate([
             {
                 path: 'reservedSeats',
@@ -101,29 +104,18 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-
 // handle any non-existent page
 app.get('*', (req, res, next) => {
     res.send('page not found');
     next();
 })
 
-// begin listening to the ports
-const server = app.listen(process.env.PORT_NUM, () => {
-    console.log(`Begun Listening to port ${process.env.PORT_NUM}`)
+
+io.on('connection', (socket) => {
+
 });
 
-const io = new Server(server, {
-    cors: {
-        origin: "http://localhost:5500"
-    }
-})
-
-io.on('connection', socket => {
-    console.log(`User ${socket.id} connected`)
-
-    // socket.on('message', data => {
-    //     console.log(data)
-    //     io.emit('message', `${socket.id.substring(0, 5)}: ${data}`)
-    // })
-})
+// begin listening to the ports
+server.listen(process.env.PORT_NUM, () => {
+    console.log(`Begun Listening to port ${process.env.PORT_NUM}`)
+});

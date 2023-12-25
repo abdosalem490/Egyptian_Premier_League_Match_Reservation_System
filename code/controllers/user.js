@@ -162,6 +162,8 @@ module.exports.cancelReservation = async (req, res) => {
     match.reservedSeats.splice(match.reservedSeats.indexOf(req.body.seat_num), 1);
     await match.save();
 
+    res.locals.io.emit('cancel-seat', { canceled_seat: req.body.seat_num });
+
     // req.flash('success', 'reservation was canceled successfully');
     res.redirect('/reserved_seats');
 }

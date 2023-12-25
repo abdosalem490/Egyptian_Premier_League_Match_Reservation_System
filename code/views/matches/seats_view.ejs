@@ -28,6 +28,7 @@
     } */
 </style>
 
+
 <div class="ms-3">
     <h1><%= title %></h1>
     <p>Match Details: <%= match.homeTeam %> vs <%= match.awayTeam %> at <%= match.matchVenue.stadiumName %></p>
@@ -68,6 +69,16 @@
             }
         }
     }
+
+    socket.on('reserve-seats', (msg) => {
+        for(let seat of msg.reserved_seats) {
+            document.querySelector(`div[data-seat-id="${seat}"]`).classList.add('reserved')
+        }
+    });
+
+    socket.on('cancel-seat', (msg) => {
+        document.querySelector(`div[data-seat-id="${msg.canceled_seat}"]`).classList.remove('reserved')
+    });
 
     document.addEventListener("DOMContentLoaded", function () {
         const seatForm = document.getElementById('seatReservationForm');

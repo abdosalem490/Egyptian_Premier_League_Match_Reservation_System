@@ -7,7 +7,6 @@ const upload = multer({ dest: './public/resources/uploads/' });
 router.route('/')
     .post(upload.array('images'), stadiums.addStadium);
 
-
 router.route('/new')
     .get(stadiums.newStadium);
 
