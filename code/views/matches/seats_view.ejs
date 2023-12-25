@@ -1,3 +1,99 @@
-<% layout('layouts/boilerplate') -%> 
+<!-- views/matches/seats_view.ejs -->
 
-TEST
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        /* Add seat styling */
+        .seat {
+            width: 30px;
+            height: 30px;
+            margin: 5px;
+            display: inline-block;
+            background-color: lightgray;
+            border: 1px solid gray;
+            cursor: pointer;
+        }
+        .reserved {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <p>Match Details: <%= match.homeTeam %> vs <%= match.awayTeam %> at <%= match.matchVenue.stadiumName %></p>
+
+    <form id="seatReservationForm" action="/matches/<%= match._id %>/view_seats" method="PUT">
+        <div>
+            <% for (let seat of seats) { %>
+                <label for="<%= `seat-${seat._id}` %>">
+                    <input type="checkbox" name="reservedSeats" value="<%= seat._id %>" id="<%= `seat-${seat._id}` %>" <%= seat.isReserved ? 'checked' : '' %> hidden>
+                    <div class="seat <%= seat.isReserved ? 'reserved' : '' %>" data-seat-id="<%= seat._id %>"></div>
+                </label>
+            <% } %>
+        </div>
+
+        <button type="submit">Reserve Selected Seats</button>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const seatForm = document.getElementById('seatReservationForm');
+            seatForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const formData = new FormData(seatForm);
+                const selectedSeats = formData.getAll('reservedSeats');
+
+                // Add logic to send a request to reserve the selected seats
+                fetch(`/matches/<%= match._id %>/view_seats`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ selectedSeats }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Seats reserved successfully!');
+                        location.reload(); // Refresh the page after successful reservation
+                    } else {
+                        alert('Error reserving seats. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Error reserving seats. Please try again.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+<!-- <% layout('layouts/boilerplate') -%> 
+
+<% for (let i = 0; i < 3; i++) { %>
+    
+<h1 class="text-center">
+    <%= match.matchVenue.length %> vs <%= match.awayTeam %>
+</h1>
+
+<% } %>
+
+<script src="/javascripts">
+    
+</script>
+
+
+<form action="/matches/<%= match._id %>/view_seats?_method=put" method="post"> 
+
+
+</form> -->
