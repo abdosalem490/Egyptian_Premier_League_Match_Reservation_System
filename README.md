@@ -1,6 +1,39 @@
 # description
 **An online automated ticket reservation system for football matches in the Egyptian Premier League**
 
+
+
+# How to run
+1. make sure to have `.env` file in the directory called `code` where the content of the `.env` file will be as follow:
+```
+PORT_NUM=<port_number>
+SECRET="<some string key used by session>"
+DB_URL="<database_link>"
+MAPBOX_API_KEY="<mapbox_API_KEY>"
+```
+
+2. run the command `npm install` while standing in the directory called `code` to install all dependencies specified by  `package.json` file.
+3. make sure you have MongoDB installed.
+4. run `nodemon app.js` or `node app.js` to run the project.
+
+# TODOs:
+- add verification to input data
+- connect to online database
+- use any online storage service as Cloudinary instead of storing in the local files
+- modify some of the endpoints
+- change architecture of the system
+
+
+# Notes:
+- the directory [seeds](code/seeds) contains only 1 file responsible for creating seeds for the database
+- the directory [utils](code/utils) contains only 1 file responsible for some time formatting
+- the directory [views](code/views) contains files related to html files that will be rendered using `ejs` and sent 
+- the directory [routes](code/routes) contains files responsible for routing to different endpoints
+- the directory [controllers](code/controller) contains files that has code implementation for the routes
+- the directory [models](code/models) contains files responsible for defining document structures and schemas for the mongo database
+- the directory [public](code/public) contains miscellaneous files responsible for different things used by `views`
+
+
 # Features
 ## Common
 ### 0. main Page
@@ -174,5 +207,3 @@ https://github.com/abdosalem490/Egyptian_Premier_League_Match_Reservation_System
 
 
 
-
-# How to run
