@@ -5,7 +5,7 @@ module.exports.newStadium = async (req, res) => {
 };
 
 module.exports.addStadium = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     let endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${req.body.locationName}.json?limit=1&access_token=` + process.env.MAPBOX_API_KEY;
     images = req.files.map(file => ({ url: '/resources/uploads/' + file.filename, filename: file.filename }));
     fetch(endpoint, { method: "GET" })
